@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export const Default = () => {
-  return <div>404 Not Found!</div>;
+    return <div>404 Not Found!</div>;
 };
