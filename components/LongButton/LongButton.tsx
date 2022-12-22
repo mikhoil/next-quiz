@@ -1,4 +1,4 @@
-import styles from '../styles/LongButton.module.scss';
+import styles from './LongButton.module.scss';
 import { UseFormRegister } from 'react-hook-form';
 import type { Input } from '../../pages/[testId]/[questionId]';
 

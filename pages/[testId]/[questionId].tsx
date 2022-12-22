@@ -3,7 +3,7 @@ import { IParams, Test } from '../../interfaces';
 import Head from 'next/head';
 import { Layout } from '../../components/Layout';
 import { LongButton } from '../../components/LongButton/LongButton';
-import { SecondaryButton } from '../../components/SecondaryButton';
+import { SecondaryButton } from '../../components/SecondaryButton/SecondaryButton';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import connect2db from '../../lib/mongodb';
@@ -13,6 +13,7 @@ import { addAnswer, addPoint } from '../../store/slices/resultSlice';
 import { QuestionTimer } from '../../components/QuestionTimer';
 import { TimerContext } from '../_app';
 import { useContext } from 'react';
+import axios from 'axios';
 
 export function undercut<T>(arr: T[], index: number): T[] {
     return arr.slice(index).concat(arr.slice(0, index));
@@ -24,7 +25,9 @@ export type Input = {
 
 export default function QuestionPage({ tests }: { tests: Test[] }) {
     const setIsCounting = useContext(TimerContext)[1];
-    const { questionsStatuses } = useAppSelector(state => state.resultReducer);
+    const { questionsStatuses, result } = useAppSelector(
+        state => state.resultReducer
+    );
     const dispatch = useAppDispatch();
     const {
         register,
@@ -36,7 +39,7 @@ export default function QuestionPage({ tests }: { tests: Test[] }) {
     const { questionId, testId } = query as IParams;
     const test = tests.find(test => testId === test._id.toString());
     if (!test) return <Default />;
-    const { questions } = test;
+    const { questions, _id } = test;
     const question = questions.find(({ id }) => id === questionId);
     if (!question) return <Default />;
     const { text, answers } = question;
@@ -51,6 +54,7 @@ export default function QuestionPage({ tests }: { tests: Test[] }) {
                 ({ isAnswered, timeout }) => isAnswered || timeout === 0
             )
         ) {
+            axios.post('../api/sendResult.ts', { _id, result });
             push(`/${testId}/results`);
             setIsCounting(false);
         } else

@@ -6,6 +6,7 @@ interface IResultState {
         id: string;
         isAnswered: boolean;
         timeout: number;
+        allTime: number;
     }[];
 }
 
@@ -43,8 +44,8 @@ const resultSlice = createSlice({
             state.questionsStatuses = timeouts.map((timeout, index) => ({
                 id: `${index + 1}`,
                 isAnswered: false,
-                isTimeUp: false,
                 timeout,
+                allTime: timeout,
             }));
         },
         minusSecond(state, { payload: { id } }: PayloadAction<{ id: string }>) {

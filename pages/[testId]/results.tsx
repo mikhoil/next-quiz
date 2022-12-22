@@ -9,6 +9,7 @@ import connect2db from '../../lib/mongodb';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { zeroing } from '../../store/slices/resultSlice';
 import { Layout } from '../../components/Layout';
+import axios from 'axios';
 
 const Results: NextPage<{ tests: Test[] }> = ({ tests }) => {
     const setIsCounting = useContext(TimerContext)[1];
@@ -18,13 +19,13 @@ const Results: NextPage<{ tests: Test[] }> = ({ tests }) => {
     const test = tests.find(({ _id }) => _id.toString() === testId);
     const { result } = useAppSelector(state => state.resultReducer);
     if (!test) return <Default />;
-    const { questions, _id } = test;
+    const { questions, _id, results } = test!;
     return (
         <>
             <Head>
                 <title>Результаты</title>
             </Head>
-            <Layout length={questions.length} {...test}>
+            <Layout length={questions.length} {...test!}>
                 <div className="flex flex-col items-center jus">
                     <div className="text-2xl text-center mt-10">
                         Ваш результат: {result}/{questions.length}
@@ -36,7 +37,7 @@ const Results: NextPage<{ tests: Test[] }> = ({ tests }) => {
                             dispatch(
                                 zeroing({
                                     timeouts: questions.map(
-                                        ({ timeout }) => timeout
+                                        ({ allTime }) => allTime
                                     ),
                                 })
                             );
@@ -45,6 +46,12 @@ const Results: NextPage<{ tests: Test[] }> = ({ tests }) => {
                     >
                         Пройти заново
                     </button>
+                    <h3>Статистика:</h3>
+                    <ul>
+                        {results.map((res, index) => (
+                            <li key={`${_id}_${index}`}>{res}</li>
+                        ))}
+                    </ul>
                 </div>
             </Layout>
         </>

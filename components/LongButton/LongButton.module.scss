@@ -38,19 +38,19 @@
     display: inline-block;
     width: 20px;
     height: 20px;
-    background: url("../public/radio/radio-default.svg") 0 0 no-repeat;
+    background: url("../../public/radio/radio-default.svg") 0 0 no-repeat;
 }
 
 .formRadio input[type="radio"]:checked+label:before {
-    background: url("../public/radio/radio-checked.svg") 0 0 no-repeat;
+    background: url("../../public/radio/radio-checked.svg") 0 0 no-repeat;
 }
 
 .formRadio label:hover:before {
-    background: url("../public/radio/radio-hover.svg") 0 0 no-repeat;
+    background: url("../../public/radio/radio-hover.svg") 0 0 no-repeat;
 }
 
 .formRadio input[type="radio"]:disabled+label:before {
-    background: url("../public/radio/radio-disabled.svg") 0 0 no-repeat;
+    background: url("../../public/radio/radio-disabled.svg") 0 0 no-repeat;
     color: #bdbdbd;
     cursor: not-allowed;
 }

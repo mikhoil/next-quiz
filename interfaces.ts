@@ -10,6 +10,7 @@ export interface Question {
     text: string;
     answers: Answer[];
     timeout: number;
+    allTime: number;
 }
 
 export interface Test {
@@ -17,6 +18,7 @@ export interface Test {
     _id: number;
     term: string;
     timeout: number;
+    results: number[];
 }
 
 export interface IParams extends ParsedUrlQuery {

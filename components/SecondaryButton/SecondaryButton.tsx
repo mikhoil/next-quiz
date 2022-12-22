@@ -1,4 +1,4 @@
-import styles from '../styles/SecondaryButton.module.scss';
+import styles from './SecondaryButton.module.scss';
 
 interface ISecondaryProps {
     isDisabled?: boolean;
