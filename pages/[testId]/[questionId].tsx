@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import connect2db from '../../lib/mongodb';
 import { Default } from '../../components/Default';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { addAnswer, addPoint } from '../../store/slices/resultSlice';
+import { addAnswer } from '../../store/slices/resultSlice';
 import { QuestionTimer } from '../../components/QuestionTimer';
 import { TimerContext } from '../_app';
 import { useContext } from 'react';
@@ -42,13 +42,21 @@ export default function QuestionPage({ tests }: { tests: Test[] }) {
     const { questions, _id } = test;
     const question = questions.find(({ id }) => id === questionId);
     if (!question) return <Default />;
-    const { text, answers } = question;
+    const { text, answers, id } = question;
     const { timeout } = questionsStatuses.find(({ id }) => id === questionId)!;
     const onSubmit: SubmitHandler<Input> = ({ answer }) => {
-        dispatch(addAnswer({ id: questionId }));
+        dispatch(
+            addAnswer({
+                id: questionId,
+                content: answer,
+                isRight:
+                    answer ===
+                    test.answers.find(rightAnswer => rightAnswer.id === id)
+                        ?.content,
+            })
+        );
         reset();
-        if (answers.find(({ isRight }) => isRight)?.content === answer)
-            dispatch(addPoint());
+        // dispatch(addPoint());
         if (
             questionsStatuses.every(
                 ({ isAnswered, timeout }) => isAnswered || timeout === 0
@@ -105,13 +113,13 @@ export default function QuestionPage({ tests }: { tests: Test[] }) {
                             {text}
                         </p>
                         <div className={'h-[124px] m-0 grid grid-cols-2 gap-6'}>
-                            {answers.map(({ content }, index) => (
+                            {answers.map((answer, index) => (
                                 <LongButton
                                     key={index}
                                     text={text}
                                     isDisable={false}
                                     id={`${index}`}
-                                    content={content}
+                                    content={answer}
                                     register={register}
                                 />
                             ))}

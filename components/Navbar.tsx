@@ -17,7 +17,10 @@ export const Navbar: React.FC<{ length: number }> = ({ length }) => {
                     <div key={index}>
                         <div className="w-[34px] text-center h-6 text-lg">
                             {!isAnswered && timeout > 0 ? (
-                                <Link href={`/${testId}/${index + 1}`}>
+                                <Link
+                                    href={`/${testId}/${index + 1}`}
+                                    className={'active:text-blue-500'}
+                                >
                                     {index + 1}
                                 </Link>
                             ) : (

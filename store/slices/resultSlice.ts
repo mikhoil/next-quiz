@@ -7,6 +7,8 @@ interface IResultState {
         isAnswered: boolean;
         timeout: number;
         allTime: number;
+        userAnswer: string;
+        isRight: boolean | null;
     }[];
 }
 
@@ -19,20 +21,25 @@ const resultSlice = createSlice({
     name: 'result',
     initialState,
     reducers: {
-        addPoint: state => {
-            state.result++;
-        },
         addAnswer(
             state,
             {
-                payload: { id },
+                payload: { id, content, isRight },
             }: PayloadAction<{
                 id: string;
+                content: string;
+                isRight: boolean;
             }>
         ) {
+            if (isRight) state.result++;
             state.questionsStatuses = state.questionsStatuses.map(question =>
                 question.id === id
-                    ? { ...question, isAnswered: true }
+                    ? {
+                          ...question,
+                          isAnswered: true,
+                          userAnswer: content,
+                          isRight,
+                      }
                     : question
             );
         },
@@ -46,6 +53,8 @@ const resultSlice = createSlice({
                 isAnswered: false,
                 timeout,
                 allTime: timeout,
+                userAnswer: '',
+                isRight: null,
             }));
         },
         minusSecond(state, { payload: { id } }: PayloadAction<{ id: string }>) {
@@ -62,6 +71,5 @@ const resultSlice = createSlice({
     },
 });
 
-export const { addPoint, zeroing, addAnswer, minusSecond } =
-    resultSlice.actions;
+export const { zeroing, addAnswer, minusSecond } = resultSlice.actions;
 export default resultSlice.reducer;

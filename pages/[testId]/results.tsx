@@ -9,9 +9,9 @@ import connect2db from '../../lib/mongodb';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { zeroing } from '../../store/slices/resultSlice';
 import { Layout } from '../../components/Layout';
-import axios from 'axios';
+import { Results } from '../../components/Results';
 
-const Results: NextPage<{ tests: Test[] }> = ({ tests }) => {
+const ResultsPage: NextPage<{ tests: Test[] }> = ({ tests }) => {
     const setIsCounting = useContext(TimerContext)[1];
     const dispatch = useAppDispatch();
     const { query, push } = useRouter();
@@ -19,7 +19,7 @@ const Results: NextPage<{ tests: Test[] }> = ({ tests }) => {
     const test = tests.find(({ _id }) => _id.toString() === testId);
     const { result } = useAppSelector(state => state.resultReducer);
     if (!test) return <Default />;
-    const { questions, _id, results } = test!;
+    const { questions, _id } = test;
     return (
         <>
             <Head>
@@ -46,19 +46,16 @@ const Results: NextPage<{ tests: Test[] }> = ({ tests }) => {
                     >
                         Пройти заново
                     </button>
-                    <h3>Статистика:</h3>
-                    <ul>
-                        {results.map((res, index) => (
-                            <li key={`${_id}_${index}`}>{res}</li>
-                        ))}
-                    </ul>
+                    <br />
+                    <h3 className="text-2xl mb-5">Подробные результаты:</h3>
+                    <Results />
                 </div>
             </Layout>
         </>
     );
 };
 
-export default Results;
+export default ResultsPage;
 
 export const getServerSideProps: GetServerSideProps = async () => ({
     props: {
